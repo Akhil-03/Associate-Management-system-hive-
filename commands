@@ -1,0 +1,67 @@
+Commands:
+
+Create database:
+
+create database project;
+
+Use database:
+
+use project;
+
+Create a table for storing the data for master table:
+
+create table m(id int, name string, dob string, gender string, email string, contact bigint, course string, fee double, discount int, status1 string, status2 string) row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+Load the data:
+
+load data local inpath '/home/akhilm969/m.txt' into table m;
+
+Set all the ACID properties:
+
+set hive.support.concurrency = true;
+set hive.enforce.bucketing = true;
+set hive.exec.dynamic.partition.mode = nonstrict;
+set hive.txn.manager = org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
+set hive.compactor.initiator.on = true;
+
+Create table Master:
+
+create table master(id int, name string, dob string, gender string, email string, contact bigint, course string, fee double, discount int, status1 string, status2 string) stored as orc tblproperties('transactional'='true');
+
+Insert data into master:
+
+insert into master select * from m;
+
+Create table demo:
+
+create table demo(id int, name string, course string, demo_status string, demo_timing string) stored as orc tblproperties('transactional'='true'); 
+
+Insert the value in demo table using master table:
+
+insert into demo select id, name, course, status1, status2 from master where status1 = 'Demo Scheduled' or status1 = 'Demo Done';
+
+Create table enroll:
+
+create table enroll(id int, name string, course string, enroll_status string, enroll_status string batch_timing string) stored as orc tblproperties('transactional'='true');
+
+Insert the value in enroll table using master table:
+
+insert into enroll select id, name, course, status1, status2 from master where status1 = 'ENROLLED';
+
+
+Create an Account table for storing data of account table:
+
+create table a(id int, name string, email string, contact bigint, course string, total double, paid double, installments int, amount_per_installment double, last_payment_date string, due_date string) row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile;
+
+Load the data:
+
+Load data local inpath ‘/home/akhilm969/a.txt’ into table a;
+
+Create an Account table:
+
+create table account(id int, name string, email string, contact bigint, course string, total double, paid double, installments int, amount_per_installment double, last_payment_date string, due_date string)  stored as orc tblproperties('transactional'='true');
+
+Insert data into account:
+
+Insert into account select * from a;
+
