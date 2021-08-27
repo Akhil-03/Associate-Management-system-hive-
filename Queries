@@ -1,0 +1,21 @@
+Updating
+UPDATE master set status1 = 'Demo Done' where id = 152;
+
+Inserting
+insert into table enquiry values(151,'akil','akl@gmail.com',9908878849,'Bigdata',30000,10,'Demo Done','Enrolled')
+
+Information of associates who enrolled
+select * from enroll;
+
+Information of associates who missed demo
+select * from master where status1='Demo not Done';
+
+Number of associates enrolled
+select count(*) from enroll;
+
+Information of payments 
+select * from account;
+
+Number of associates for each course who enrolled;
+select course,count(*) from enroll;
+
